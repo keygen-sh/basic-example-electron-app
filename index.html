@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+  </head>
+  <body>
+    <script>
+      const { prompt, confirm, alert } = require('smalltalk')
+
+      const KEYGEN_ACCOUNT_ID = '1fddcec8-8dd3-4d8d-9b16-215cac0f9b52' // Available at https://app.keygen.sh/settings
+      const KEYGEN_PRODUCT_ID = '6962277c-e729-4bf2-96f1-edc98255675c'
+
+      async function activateAppWithLicenseKey(key) {
+        const res = await fetch(`https://api.keygen.sh/v1/accounts/${KEYGEN_ACCOUNT_ID}/licenses/actions/validate-key`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/vnd.api+json',
+            'Accept': 'application/vnd.api+json'
+          },
+          body: JSON.stringify({
+            meta: { key }
+          })
+        })
+
+        const { meta, data, errors } = await res.json()
+        if (errors) {
+          await alert('API Error', `There was an error: ${errors.map(e => `${e.title}: ${e.detail}`)}`)
+
+          return
+        }
+
+        if (!meta.valid) {
+          await alert('Invalid License', `Your license is invalid: ${meta.detail}`)
+
+          // Ask the user if they'd like to retry inputting their license key
+          confirm('Try Again', 'Do you want to try again?')
+            .then(boopApp)
+
+          return
+        }
+
+        // Render the app
+        const template = document.createElement('template')
+
+        template.innerHTML = `
+          <h1>
+            Hello World!
+          </h1>
+          <p>
+            Your license information:
+          </p>
+          <table>
+            <tbody>
+              <tr>
+                <td><strong>ID</strong></td>
+                <td>${data.id}</td>
+              </tr>
+              <tr>
+                <td><strong>Key</strong></td>
+                <td>${data.attributes.key}</td>
+              </tr>
+              <tr>
+                <td><strong>Expiry</strong></td>
+                <td>${data.attributes.expiry}</td>
+              </tr>
+              <tr>
+                <td><strong>Policy</strong></td>
+                <td>${data.relationships.policy.data.id}</td>
+              </tr>
+            </tbody>
+          </table>
+          <button onclick='boopApp()'>
+            Restart
+          </button>
+        `.trim()
+
+        for (let node of template.content.childNodes) {
+          document.body.appendChild(node)
+        }
+      }
+
+      async function boopApp() {
+        document.body.innerHTML = ''
+
+        // Prompt the user for their license key
+        const key = await prompt('License Required', 'Please enter your license key:', 'demo')
+
+        // Attempt to activate the app by validating the license key
+        await activateAppWithLicenseKey(key)
+      }
+
+      boopApp()
+    </script>
+  </body>
+</html>
