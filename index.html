@@ -9,7 +9,7 @@
       const { prompt, confirm, alert } = require('smalltalk')
 
       const KEYGEN_ACCOUNT_ID = '1fddcec8-8dd3-4d8d-9b16-215cac0f9b52' // Available at https://app.keygen.sh/settings
-      const KEYGEN_PRODUCT_ID = '6962277c-e729-4bf2-96f1-edc98255675c'
+      const KEYGEN_PRODUCT_ID = '5499e2ec-47e6-44cb-91e9-b5d5d65c5590'
 
       async function activateAppWithLicenseKey(key) {
         const res = await fetch(`https://api.keygen.sh/v1/accounts/${KEYGEN_ACCOUNT_ID}/licenses/actions/validate-key`, {
@@ -19,7 +19,10 @@
             'Accept': 'application/vnd.api+json'
           },
           body: JSON.stringify({
-            meta: { key }
+            meta: {
+              scope: { product: KEYGEN_PRODUCT_ID },
+              key
+            }
           })
         })
 
