@@ -1,6 +1,8 @@
 # Keygen + Electron Example
 
-This is a minimal Electron application integrated with [Keygen](https://keygen.sh) to handle license key validation upon startup. It is based on the Quick Start Guide within the Electron documentation. For a more advanced licensing setup, and an example of how to use Keygen for auto updates, check out [our other Electron example app](https://github.com/keygen-sh/example-electron-app).
+⚠️ **We've put together a new, updated example here: https://github.com/keygen-sh/example-electron-license-activation** ⚠️
+
+This is a minimal Electron application integrated with [Keygen](https://keygen.sh) to handle license key validation upon startup. It is based on the Quick Start Guide within the Electron documentation. For a more advanced user-profile licensing setup, and an example of how to use Keygen for auto updates, check out [our other Electron example app](https://github.com/keygen-sh/example-electron-app).
 
 **Use this app along with the [Electron API Demos](http://electron.atom.io/#get-started) app for API code examples to help you get started.**
 
